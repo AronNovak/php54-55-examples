@@ -1,0 +1,130 @@
+Migrating from PHP 5.4.x to PHP 5.5.x
+
+Generators added 
+
+Support for generators has been added via the yield keyword. Generators provide an easy way to implement simple iterators without the overhead or complexity of implementing a class that implements the Iterator interface.
+
+A simple example that reimplements the range() function as a generator (at least for positive step values):
+<?php
+function xrange($start, $limit, $step = 1) {
+      for ($i = $start; $i <= $limit; $i += $step) {
+                yield $i;
+                    }
+}
+
+echo 'Single digit odd numbers: ';
+
+/*
+   * Note that an array is never created or returned,
+    * which saves memory.
+     */
+foreach (xrange(1, 9, 2) as $number) {
+      echo "$number ";
+}
+
+echo "\n";
+?>
+
+The above example will output:
+
+Single digit odd numbers: 1 3 5 7 9 
+
+finally keyword added ¶
+
+try-catch blocks now support a finally block for code that should be run regardless of whether an exception has been thrown or not.
+New password hashing API ¶
+
+A new password hashing API that makes it easier to securely hash and manage passwords using the same underlying library as crypt() in PHP has been added. See the documentation for password_hash() for more detail.
+foreach now supports list() ¶
+
+The foreach control structure now supports unpacking nested arrays into separate variables via the list() construct. For example:
+<?php
+$array = [
+      [1, 2],
+          [3, 4],
+        ];
+
+foreach ($array as list($a, $b)) {
+      echo "A: $a; B: $b\n";
+}
+?>
+
+The above example will output:
+
+A: 1; B: 2
+A: 3; B: 4
+
+Further documentation is available on the foreach manual page.
+empty() supports arbitrary expressions ¶
+
+Passing an arbitrary expression instead of a variable to empty() is now supported. For example:
+<?php
+function always_false() {
+      return false;
+}
+
+if (empty(always_false())) {
+      echo "This will be printed.\n";
+}
+
+if (empty(true)) {
+      echo "This will not be printed.\n";
+}
+?>
+
+The above example will output:
+
+This will be printed.
+
+array and string literal dereferencing ¶
+
+Array and string literals can now be dereferenced directly to access individual elements and characters:
+<?php
+echo 'Array dereferencing: ';
+echo [1, 2, 3][0];
+echo "\n";
+
+echo 'String dereferencing: ';
+echo 'PHP'[0];
+echo "\n";
+?>
+
+The above example will output:
+
+Array dereferencing: 1
+String dereferencing: P
+
+Class name resolution via ::class ¶
+
+It is possible to use ClassName::class to get a fully qualified name of class ClassName. For example:
+<?php
+namespace Name\Space;
+class ClassName {}
+
+echo ClassName::class;
+
+echo "\n";
+?>
+
+The above example will output:
+
+Name\Space\ClassName
+
+OPcache extension added ¶
+
+The Zend Optimiser+ opcode cache has been added to PHP as the new OPcache extension. OPcache improves PHP performance by storing precompiled script bytecode in shared memory, thereby removing the need for PHP to load and parse scripts on each request. See the installation instructions for more detail on enabling and using OPcache.
+foreach now supports non-scalar keys ¶
+
+foreach now supports keys of any type. While non-scalar keys cannot occur in native PHP arrays, it is possible for Iterator::key() to return a value of any type, and this will now be handled correctly.
+Apache 2.4 handler supported on Windows ¶
+
+The Apache 2.4 handler SAPI is now supported on Windows.
+Improvements to GD ¶
+
+Various improvements have been made to the GD extension, these include:
+
+    Flipping support using the new imageflip() function.
+    Advanced cropping support using the imagecrop() & imagecropauto() functions.
+    WebP read and write support using imagecreatefromwebp() & imagewebp() respectively.
+
+
